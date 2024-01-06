@@ -1,15 +1,24 @@
 import { faCheckCircle, faCheckSquare, faCircle } from '@fortawesome/free-regular-svg-icons'
 import { faPen, faRadiation, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
 function Products() {
-    const [products, setProducts] = useState([
-        { id: 1, name: "Computer", price: 2300, checked: false },
-        { id: 2, name: "Printer", price: 5300, checked: true },
-        { id: 3, name: "Smart Phone", price: 3000, checked: true },
-        { id: 4, name: "Scan", price: 2300, checked: false },
-    ])
+    const [products, setProducts] = useState([])
+    useEffect(()=>{
+        handleGetProducts();
+    },[])
+    const handleGetProducts = ()=>{
+        axios.get("http://localhost:9000/products")
+        .then(Response=>{
+            const product = Response.data;
+            setProducts(product)
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    }
     const handleDeleteProduct = (product) =>{
         const newProducts = products.filter((p)=>p.id != product.id);
        setProducts(newProducts);
